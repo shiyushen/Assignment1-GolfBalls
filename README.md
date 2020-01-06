@@ -37,4 +37,4 @@ Here's the pseudocode. Your job is to flesh it out, run it for at least 3 test s
 
 # 5. If the observed test statistic value falls in the tails of the null distribution plotted in step 3, (quantify this using the percentile of that value in the null distribution - known as the p-value) we reject the null hypothesis that the numbers on the balls are uniformly distributed.
 
-```{r}
+```
