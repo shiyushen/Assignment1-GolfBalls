@@ -1,36 +1,9 @@
 ---
 title: "Golf balls assignment - pseudocode"
-author: "Paul M"
+author: "sherry"
 date: "1/6/2020"
 output: html_document
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
-
-
-## Now onto the assignment.....
 
 This assignment asks you the following:
 
@@ -69,3 +42,80 @@ Here's the pseudocode. Your job is to flesh it out, run it for at least 3 test s
 # 5. If the observed test statistic value falls in the tails of the null distribution plotted in step 3, (quantify this using the percentile of that value in the null distribution - known as the p-value) we reject the null hypothesis that the numbers on the balls are uniformly distributed.
 
 ```
+
+# Initializing
+
+```{r initialize}
+#install.packages("purrr")
+library("purrr")
+
+#initialize
+NumberOfTrials <- 10000
+GolfballNumber <- 0
+range <- vector()
+maxnumber <- vector()
+variance <- vector()
+observed <- c(137, 138, 107, 104)
+```
+
+# Range
+```{r range}
+set.seed(1234)
+#compute range
+for (i in 1:NumberOfTrials) {
+  GolfballNumber <- rdunif(486,1,4) #generate golf ball number
+  range[i] <- max(table(GolfballNumber))-min(table(GolfballNumber))
+}
+
+#compute p-value
+r <- length(range[which(range>(max(observed)-min(observed)))])
+p_value1 <- r/NumberOfTrials
+
+#plot test statistics 
+hist(range)
+abline(v=34, col="red")
+text(34,34,"p-value=0.122")
+```
+
+Here I use the range between max and min observed golf ball number as test statistics, which is 34. I obtained p-value=0.122 which is larger than 0.05. Thus we fail to reject the null hypothesis that the numbers on the balls are distributed equally likely. 
+
+# Maximum 
+```{r max}
+#compute maximum
+for (i in 1:NumberOfTrials) {
+  GolfballNumber <- rdunif(486,1,4)
+  maxnumber[i] <- max(table(GolfballNumber))
+}
+
+#compute p-value
+m <- length(maxnumber[which(maxnumber>max(observed))])
+p_value2 <- m/NumberOfTrials
+
+#plot test statistics
+hist(maxnumber)
+abline(v=138, col="red")
+text(138,138,"p-value=0.1545")
+```
+
+Here I use the maximum of the observed golfball number as test statistics, which is 138. I obtained p-value=0.155 which is larger than 0.05. Thus we fail to reject the null hypothesis that the numbers on the balls are distributed equally likely. 
+
+#Variance
+
+```{r var}
+#compute variance
+for (i in 1:NumberOfTrials) {
+  GolfballNumber <- rdunif(486,1,4)
+  variance[i] <- var(table(GolfballNumber))
+}
+
+#compute p-value
+v <- length(variance[which(variance>var(observed))])
+p_value3 <- v/NumberOfTrials
+
+#plot test statistics
+hist(variance)
+abline(v=15, col="red")
+text(15,15,"p-value=0.038")
+```
+
+Here I use the variance of the observed golf ball number as test statistics, which is 15. I obtained p-value=0.038 which is less than 0.05. Thus we reject the null hypothesis that the numbers on the balls are distributed equally likely.
